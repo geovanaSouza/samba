@@ -60,6 +60,7 @@ perms() { local i file=/etc/samba/smb.conf
 # Arguments:
 #   share) share name
 #   path) path to share
+#   writeable) 'yes' or 'no'
 #   browsable) 'yes' or 'no'
 #   readonly) 'yes' or 'no'
 #   guest) 'yes' or 'no'
@@ -67,12 +68,13 @@ perms() { local i file=/etc/samba/smb.conf
 #   admins) list of admin users
 #   writelist) list of users that can write to a RO share
 # Return: result
-share() { local share="$1" path="$2" browsable=${3:-yes} ro=${4:-yes} \
-                guest=${5:-yes} users=${6:-""} admins=${7:-""} \
-                writelist=${8:-""} file=/etc/samba/smb.conf
+share() { local share="$1" path="$2" writeable="${3:-no}" browsable=${4:-yes} ro=${5:-yes} \
+                guest=${6:-yes} users=${7:-""} admins=${8:-""} \
+                writelist=${9:-""} file=/etc/samba/smb.conf
     sed -i "/\\[$share\\]/,/^\$/d" $file
     echo "[$share]" >>$file
     echo "   path = $path" >>$file
+    echo "   writeable = $writeable" >>$file
     echo "   browsable = $browsable" >>$file
     echo "   read only = $ro" >>$file
     echo "   guest ok = $guest" >>$file
@@ -141,11 +143,12 @@ Options (fields in '[]' are optional, '<>' are required):
                 required arg: \"<path>\" - full file path in container
     -n          Start the 'nmbd' daemon to advertise the shares
     -p          Set ownership and permissions on the shares
-    -s \"<name;/path>[;browse;readonly;guest;users;admins;wl]\" Config a share
+    -s \"<name;/path>[;writeable;browse;readonly;guest;users;admins;wl]\" Config a share
                 required arg: \"<name>;<comment>;</path>\"
                 <name> is how it's called for clients
                 <path> path to share
                 NOTE: for the default value, just leave blank
+                [writeable] default:'no' or 'yes'
                 [browsable] default:'yes' or 'no'
                 [readonly] default:'yes' or 'no'
                 [guest] allowed default:'yes' or 'no'
