@@ -6,7 +6,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends procps samba \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    useradd -c 'Samba User' -d /tmp -M -r smbuser && \
+    useradd -c 'Samba User' -u 1001 -d /tmp -M -r smbuser && \
     sed -i 's|^\(   log file = \).*|\1/dev/stdout|' /etc/samba/smb.conf && \
     sed -i 's|^\(   unix password sync = \).*|\1no|' /etc/samba/smb.conf && \
     sed -i '/Share Definitions/,$d' /etc/samba/smb.conf && \
